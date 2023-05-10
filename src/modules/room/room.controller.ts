@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('rooms')
 @Controller('room')
 export class RoomController {
     constructor(private readonly roomService: RoomService) { }
