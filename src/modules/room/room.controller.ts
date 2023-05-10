@@ -24,7 +24,7 @@ export class RoomController {
     }
 
     @Put(':id')
-    async updateRoom(@Param('id') roomId: string, @Body() room : UpdateRoomRequestDTO){
-
+    async updateRoom(@Param('id') roomId: string, @Body() udpatedRoom : UpdateRoomRequestDTO){
+        return this.roomService.updateRoom(roomId, udpatedRoom);
     }
 }
