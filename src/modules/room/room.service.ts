@@ -3,6 +3,9 @@ import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 
 @Injectable()
 export class RoomService {
+    getRoomsById(id: string) {
+        return id;
+    }
     createNewRoom(room: CreateRoomRequestDTO) {
         return room;
     }

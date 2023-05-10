@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
 
@@ -13,5 +13,10 @@ export class RoomController {
     @Post()
     async createNewRoom(@Body() room: CreateRoomRequestDTO) {
         return this.roomService.createNewRoom(room);
+    }
+
+    @Get(":id")
+    async getRoomById(@Param('id') roomId: string ){
+        return this.roomService.getRoomsById(roomId);
     }
 }
