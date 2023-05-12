@@ -5,7 +5,11 @@ import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO
 
 @Injectable()
 export class RoomService {
-    patchRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
+    disableRoom(roomId: string) {
+        //ToDo
+        return roomId;
+    }
+    updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
         //ToDo
         return newResources;
     }
