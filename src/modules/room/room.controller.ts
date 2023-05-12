@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
+import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 
 @ApiTags('rooms')
 @Controller('room')
@@ -27,4 +28,9 @@ export class RoomController {
     async updateRoom(@Param('id') roomId: string, @Body() udpatedRoom : UpdateRoomRequestDTO){
         return this.roomService.updateRoom(roomId, udpatedRoom);
     }
+
+    @Patch(':id')
+    async patchRoomResource(@Param('id') roomId: string, @Body() newResources: UpdateRoomResourceRequestDTO) {
+        return this.roomService.patchRoomResource(roomId, newResources);
+  }
 }
