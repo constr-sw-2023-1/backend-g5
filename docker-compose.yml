@@ -5,6 +5,16 @@ volumes:
   keycloak-data:
     external: true
 services:
+  rooms:
+    container_name: rooms
+    build: .
+    ports:
+      - 3000:8085
+    networks:
+      - cinco
+    depends_on:
+      - oauth
+    
   keycloak:
     container_name: keycloak
     image: jboss/keycloak:latest
