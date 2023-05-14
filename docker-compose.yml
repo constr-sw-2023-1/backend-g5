@@ -1,0 +1,60 @@
+version: '3.4'
+networks:
+  cinco:
+volumes:
+  keycloak-data:
+    external: true
+services:
+  keycloak:
+    container_name: keycloak
+    image: jboss/keycloak:latest
+    command: start-dev --import-realm
+    ports:
+      - "8090:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=a12345678
+      - KEYCLOAK_FRONTEND_URL=http://localhost:8090
+    volumes:
+      - keycloak-data:/opt/jboss/keycloak/standalone/data
+    networks:
+      - cinco
+
+  oauth:
+    depends_on:
+      - keycloak
+    container_name: oauth
+    build: .
+    image: ghcr.io/constr-sw-2023-1/oauth-g4:latest
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8080/actuator/health"
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_CLIENT_ID=oauth
+      - KEYCLOAK_CLIENT_SECRET=04bfUatIDO6ipwg1TF2mTzHrX8UZD02Z
+      - KEYCLOAK_REALM=construcao-sw
+      - KEYCLOAK_REALM_URL=http://keycloak:8080
+    networks:
+      - cinco
+
+  database:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    networks:
+      - cinco
