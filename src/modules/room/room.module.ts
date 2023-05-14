@@ -3,10 +3,9 @@ import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
 import { HttpModule } from '@nestjs/axios';
 
-
 @Module({
   imports: [HttpModule],
   providers: [RoomService],
-  controllers: [RoomController]
+  controllers: [RoomController],
 })
-export class RoomModule { }
+export class RoomModule {}

@@ -1,5 +1,5 @@
-import { Resource } from "../models/Resource.model";
+import { Resource } from '../models/Resource.model';
 
 export class UpdateRoomResourceRequestDTO {
-    resources: Resource[];
+  resources: Resource[];
 }

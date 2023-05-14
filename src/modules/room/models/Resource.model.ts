@@ -1,3 +1,3 @@
 export class Resource {
-    name: string;
+  name: string;
 }
