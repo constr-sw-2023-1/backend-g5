@@ -1,6 +1,8 @@
+import { UUID } from 'crypto';
+
 export class Building {
-    id: string;
-    building_num: number;
-    name: string;
-    campus: string;
+  id: UUID;
+  building_num: number;
+  name: string;
+  campus: string;
 }
