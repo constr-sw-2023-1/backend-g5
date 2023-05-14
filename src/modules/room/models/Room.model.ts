@@ -1,7 +1,8 @@
+import { UUID } from 'crypto';
 import { Resource } from './Resource.model';
 
 export class Room {
-  id: string;
+  id: UUID;
   name: string;
   capacity: number;
   floor: number;
