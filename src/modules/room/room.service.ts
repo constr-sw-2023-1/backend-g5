@@ -34,6 +34,6 @@ export class RoomService {
     return this.roomModel.create(room);
   }
   getAllRooms() {
-    return 'working';
+    return this.roomModel.find().exec();
   }
 }
