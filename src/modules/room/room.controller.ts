@@ -14,12 +14,15 @@ import { ApiTags } from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { UUID } from 'crypto';
+import { Unprotected } from 'nest-keycloak-connect';
 
 @ApiTags('rooms')
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
+  @Get()
+  @Unprotected()
   async getAllRooms() {
     return this.roomService.getAllRooms();
   }

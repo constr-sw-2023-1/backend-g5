@@ -9,7 +9,7 @@ services:
     container_name: rooms
     build: .
     ports:
-      - 3000:8085
+      - 3000:3000
     networks:
       - cinco
     depends_on:
@@ -18,7 +18,6 @@ services:
   keycloak:
     container_name: keycloak
     image: jboss/keycloak:latest
-    command: start-dev --import-realm
     ports:
       - "8090:8080"
     environment:
@@ -34,7 +33,6 @@ services:
     depends_on:
       - keycloak
     container_name: oauth
-    build: .
     image: ghcr.io/constr-sw-2023-1/oauth-g4:latest
     healthcheck:
       test:
