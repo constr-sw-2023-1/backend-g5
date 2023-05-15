@@ -34,7 +34,6 @@ export class RoomService {
     return this.roomModel.create(room);
   }
   getAllRooms() {
-    //ToDo
-    throw new Error('Method not implemented.');
+    return 'working';
   }
 }
