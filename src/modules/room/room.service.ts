@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
-import { UUID } from 'crypto';
-import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 
 @Injectable()
 export class RoomService {
