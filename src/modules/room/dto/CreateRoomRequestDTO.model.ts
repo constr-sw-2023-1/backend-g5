@@ -1,6 +1,9 @@
-import { Building } from '../models/Building.model';
-import { Room } from '../models/Room.model';
+import { Resource } from '../models/Resource.model';
 
 export class CreateRoomRequestDTO {
-  room: Room;
+  name: string;
+  capacity: number;
+  floor: number;
+  resources: Resource[];
+  building: string;
 }
