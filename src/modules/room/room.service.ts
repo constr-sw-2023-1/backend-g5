@@ -13,10 +13,14 @@ export class RoomService {
     private readonly roomModel: Model<RoomDocument>,
   ) { }
 
-  disableRoom(roomId: string) {
-    //ToDo
-    return roomId;
+  async getAllRooms() {
+    return this.roomModel.find().exec();
   }
+
+  async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
+    return this.roomModel.create(room);
+  }
+
   updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
     //ToDo
     return newResources;
@@ -29,10 +33,9 @@ export class RoomService {
     //ToDo
     return id;
   }
-  async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
-    return this.roomModel.create(room);
-  }
-  getAllRooms() {
-    return this.roomModel.find().exec();
+
+  disableRoom(roomId: string) {
+    //ToDo
+    return roomId;
   }
 }
