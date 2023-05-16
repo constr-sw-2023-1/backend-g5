@@ -3,5 +3,4 @@ import { Room } from '../models/Room.model';
 
 export class CreateRoomRequestDTO {
   room: Room;
-  building: Building;
 }
