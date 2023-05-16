@@ -1,12 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UUID } from 'crypto';
 
 export type BuildingDocument = Building & Document;
 
 @Schema()
 export class Building {
   @Prop()
-  id: UUID;
+  id: string;
 
   @Prop()
   building_num: number;
