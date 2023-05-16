@@ -1,10 +1,11 @@
+import { Building } from './Building.model';
 import { Resource } from './Resource.model';
 
 export interface Room {
-  id: string;
+  _id: string;
   name: string;
   capacity: number;
   floor: number;
   resources: Resource[];
-  building_id: string;
+  building: Building;
 }

@@ -12,7 +12,7 @@ export class Building implements IBuilding {
       return uuidv4()
     }
   })
-  id: string
+  _id: string
 
   @Prop()
   building_num: number;
