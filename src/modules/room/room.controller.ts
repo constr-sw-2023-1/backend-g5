@@ -13,13 +13,12 @@ import { RoomService } from './room.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
-import { UUID } from 'crypto';
 import { Unprotected } from 'nest-keycloak-connect';
 
 @ApiTags('rooms')
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly roomService: RoomService) { }
 
   @Get()
   @Unprotected()
@@ -33,13 +32,13 @@ export class RoomController {
   }
 
   @Get(':id')
-  async getRoomById(@Param('id') roomId: UUID) {
+  async getRoomById(@Param('id') roomId: string) {
     return this.roomService.getRoomsById(roomId);
   }
 
   @Put(':id')
   async updateRoom(
-    @Param('id') roomId: UUID,
+    @Param('id') roomId: string,
     @Body() udpatedRoom: UpdateRoomRequestDTO,
   ) {
     return this.roomService.updateRoom(roomId, udpatedRoom);
@@ -47,14 +46,14 @@ export class RoomController {
 
   @Patch(':id')
   async patchRoomResource(
-    @Param('id') roomId: UUID,
+    @Param('id') roomId: string,
     @Body() newResources: UpdateRoomResourceRequestDTO,
   ) {
     return this.roomService.updateRoomResource(roomId, newResources);
   }
 
   @Delete(':id')
-  async deleteRoom(@Param('id') roomId: UUID) {
+  async deleteRoom(@Param('id') roomId: string) {
     return this.roomService.disableRoom(roomId);
   }
 }

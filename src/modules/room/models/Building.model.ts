@@ -1,7 +1,5 @@
-import { UUID } from 'crypto';
-
-export class Building {
-  id: UUID;
+export interface Building {
+  id: string;
   building_num: number;
   name: string;
   campus: string;

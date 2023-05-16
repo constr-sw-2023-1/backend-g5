@@ -1,8 +1,7 @@
-import { UUID } from 'crypto';
 import { Resource } from './Resource.model';
 
-export class Room {
-  id: UUID;
+export interface Room {
+  id: string;
   name: string;
   capacity: number;
   floor: number;

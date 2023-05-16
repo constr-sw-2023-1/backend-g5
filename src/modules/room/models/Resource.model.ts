@@ -1,3 +1,3 @@
-export class Resource {
+export interface Resource {
   name: string;
 }
