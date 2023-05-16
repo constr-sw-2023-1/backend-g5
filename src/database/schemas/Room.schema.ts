@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Resource } from './Resource.schema';
+import { Room as IRoom } from '../../modules/room/models/Room.model';
 
 export type RoomDocument = Room & Document;
 
 @Schema()
-export class Room {
+export class Room implements IRoom {
   @Prop()
   id: string;
 
