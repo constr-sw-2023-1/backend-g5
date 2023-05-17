@@ -30,8 +30,11 @@ export class RoomService {
     return udpatedRoom;
   }
   getRoomsById(id: string) {
-    //ToDo
-    return id;
+    try {
+      return this.roomModel.findById(id);
+    } catch (error) {
+      throw new Error("Domain error when finding room by ID.");
+    }
   }
 
   disableRoom(roomId: string) {

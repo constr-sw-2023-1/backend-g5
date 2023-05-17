@@ -33,6 +33,7 @@ export class RoomController {
   }
 
   @Get(':id')
+  @Unprotected()
   async getRoomById(@Param('id') roomId: string) {
     return this.roomService.getRoomsById(roomId);
   }
