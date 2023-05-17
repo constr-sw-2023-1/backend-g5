@@ -1,4 +1,5 @@
-import { Building } from './Building.model';
+import { ObjectId } from 'mongoose';
+import { Building } from 'src/modules/building/models/Building.model';
 import { Resource } from './Resource.model';
 
 export interface Room {
@@ -7,5 +8,5 @@ export interface Room {
   capacity: number;
   floor: number;
   resources: Resource[];
-  building: Building;
+  building: string;
 }
