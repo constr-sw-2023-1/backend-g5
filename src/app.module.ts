@@ -9,6 +9,7 @@ import {
   RoleGuard,
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { BuildingModule } from './modules/building/building.module';
 
 const keyCloakOptionsProvider = {
   provide: 'keyCloakDataProvider',
@@ -27,6 +28,7 @@ const keyCloakOptionsProvider = {
   imports: [
     KeycloakConnectModule.registerAsync(keyCloakOptionsProvider),
     RoomModule,
+    BuildingModule,
     HttpModule,
     ConfigModule.forRoot({
       isGlobal: true,
