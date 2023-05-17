@@ -4,7 +4,6 @@ import { RoomController } from './room.controller';
 import { HttpModule } from '@nestjs/axios';
 import { DatabaseModule } from 'src/database/database.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Building, BuildingSchema } from 'src/database/schemas/Building.schema';
 import { Room, RoomSchema } from 'src/database/schemas/Room.schema';
 import { Resource, ResourceSchema } from 'src/database/schemas/Resource.schema';
 
@@ -13,7 +12,6 @@ import { Resource, ResourceSchema } from 'src/database/schemas/Resource.schema';
     DatabaseModule,
     MongooseModule.forFeature([
       { name: Room.name, schema: RoomSchema },
-      { name: Building.name, schema: BuildingSchema },
       { name: Resource.name, schema: ResourceSchema },
     ]),
     HttpModule,

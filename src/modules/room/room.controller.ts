@@ -8,13 +8,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
-import { RoomService } from './room.service';
 import { ApiTags } from '@nestjs/swagger';
-import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
-import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { UUID } from 'crypto';
 import { Unprotected } from 'nest-keycloak-connect';
+import { RoomService } from './room.service';
+import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
+import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
+import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 
 @ApiTags('rooms')
 @Controller('room')
