@@ -26,6 +26,7 @@ export class RoomController {
     return this.roomService.getAllRooms();
   }
 
+  @Unprotected()
   @Post()
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
