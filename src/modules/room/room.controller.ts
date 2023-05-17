@@ -30,6 +30,11 @@ export class RoomController {
   @Post()
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
+  
+  }
+  @Get()
+  async getAllRoomsWithCapacity(@Param('capacity') capacity: number) {
+    return this.roomService.getAllRoomsWithCapacity(capacity);
   }
 
   @Get(':id')

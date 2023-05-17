@@ -38,4 +38,8 @@ export class RoomService {
     //ToDo
     return roomId;
   }
+
+  getAllRoomsWithCapacity(capacity: number) {
+    return this.roomModel.find({ capacity: { $gt: capacity } });
+  }
 }
