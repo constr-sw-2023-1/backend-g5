@@ -1,24 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { UUID } from 'crypto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
+import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) {}
+  ) { }
 
-  disableRoom(roomId: UUID) {
-    //ToDo
-    return roomId;
+  async getAllRooms() {
+    return this.roomModel.find().exec();
   }
-  updateRoomResource(roomId: UUID, newResources: UpdateRoomResourceRequestDTO) {
+
+  async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
+    return this.roomModel.create(room);
+  }
+
+  updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
     //ToDo
     return newResources;
   }
@@ -26,14 +29,13 @@ export class RoomService {
     //ToDo
     return udpatedRoom;
   }
-  getRoomsById(id: UUID) {
+  getRoomsById(id: string) {
     //ToDo
     return id;
   }
-  async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
-    return this.roomModel.create(room);
-  }
-  getAllRooms() {
-    return this.roomModel.find().exec();
+
+  disableRoom(roomId: string) {
+    //ToDo
+    return roomId;
   }
 }

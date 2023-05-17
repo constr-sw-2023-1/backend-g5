@@ -1,11 +1,12 @@
-import { UUID } from 'crypto';
+import { ObjectId } from 'mongoose';
+import { Building } from 'src/modules/building/models/Building.model';
 import { Resource } from './Resource.model';
 
-export class Room {
-  id: UUID;
+export interface Room {
+  _id: string;
   name: string;
   capacity: number;
   floor: number;
   resources: Resource[];
-  building_id: string;
+  building: string;
 }

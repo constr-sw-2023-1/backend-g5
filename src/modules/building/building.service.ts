@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UUID } from 'crypto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Building, BuildingDocument } from 'src/database/schemas/Building.schema';
@@ -11,27 +10,27 @@ export class BuildingService {
   constructor(
     @InjectModel(Building.name)
     private readonly buildingModel: Model<BuildingDocument>,
-  ) {}
+  ) { }
 
   async createNewBuilding(building: CreateBuildingRequestDTO): Promise<BuildingDocument> {
     return this.buildingModel.create(building);
   }
 
-  getAllBuilding() {
-    return 'working';
+  async getAllBuilding() {
+    return this.buildingModel.find().exec();
   }
 
-  getBuildingById(id: UUID) {
+  getBuildingById(id: string) {
     //ToDo
     return id;
   }
-  
+
   updateBuilding(buildingId: string, udpatedBuilding: UpdateBuildingRequestDTO) {
     //ToDo
     return udpatedBuilding;
   }
 
-  disableBuilding(buildingId: UUID) {
+  disableBuilding(buildingId: string) {
     //ToDo
     return buildingId;
   }
