@@ -1,19 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Building as IBuilding } from '../../modules/building/models/Building.model';
-import { v4 as uuidv4 } from 'uuid';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 
 
 export type BuildingDocument = Building & Document;
 
-@Schema()
+@Schema({ strict: false })
 export class Building implements IBuilding {
   @Prop({
-    type: String, default: function genUUID() {
-      return uuidv4()
-    }
+    type: Types.ObjectId,
+    default: Types.ObjectId,
   })
-  _id: string
+  _id: Types.ObjectId;
 
   @Prop()
   building_num: number;

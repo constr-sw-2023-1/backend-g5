@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { Building, BuildingDocument } from 'src/database/schemas/Building.schema';
 import { CreateBuildingRequestDTO } from './dto/CreateBuildingRequestDTO.model';
 import { UpdateBuildingRequestDTO } from './dto/UpdateBuildingRequestDTO.model';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Injectable()
 export class BuildingService {
@@ -13,7 +15,13 @@ export class BuildingService {
   ) { }
 
   async createNewBuilding(building: CreateBuildingRequestDTO): Promise<BuildingDocument> {
-    return this.buildingModel.create(building);
+    const newBuilding = new this.buildingModel({
+      _id: uuidv4(),
+      building_num: building.building_num,
+      name: building.name,
+      campus: building.campus,
+    });
+    return newBuilding.save();
   }
 
   async getAllBuilding() {
