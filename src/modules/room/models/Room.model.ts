@@ -1,4 +1,4 @@
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { Building } from 'src/modules/building/models/Building.model';
 import { Resource } from './Resource.model';
 
