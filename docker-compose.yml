@@ -28,32 +28,6 @@ services:
       - keycloak-data:/opt/jboss/keycloak/standalone/data
     networks:
       - cinco
-      #oauth:
-      #depends_on:
-      # - keycloak
-      #container_name: oauth
-      #image: ghcr.io/constr-sw-2023-1/oauth-g4:latest
-      #healthcheck:
-      # test:
-      #  [
-      #   "CMD",
-      #  "curl",
-      # "-f",
-      # "http://localhost:8080/actuator/health"
-      #]
-      #interval: 10s
-      #timeout: 10s
-      #retries: 5
-      #start_period: 20s
-      #ports:
-      # - "8080:8080"
-      #environment:
-      # - KEYCLOAK_CLIENT_ID=oauth
-      #- KEYCLOAK_CLIENT_SECRET=04bfUatIDO6ipwg1TF2mTzHrX8UZD02Z
-      #- KEYCLOAK_REALM=construcao-sw
-      #- KEYCLOAK_REALM_URL=http://keycloak:8080
-      #networks:
-      #- cinco
 
   database:
     container_name: mongo
