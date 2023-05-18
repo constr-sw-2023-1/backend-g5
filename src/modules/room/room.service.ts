@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
-import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import { error } from 'console';
+
 
 @Injectable()
 export class RoomService {
@@ -18,7 +21,27 @@ export class RoomService {
   }
 
   async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
-    return this.roomModel.create(room);
+    const newRoom = new this.roomModel({
+      _id: uuidv4(),
+      name: room.name,
+      capacity: room.capacity,
+      floor: room.floor,
+      resources: room.resources,
+      building: room.building,
+    });
+
+    const savedRoom = await newRoom.save();
+
+    const populatedRoom = await this.roomModel
+      .findById(savedRoom._id)
+      .populate('building', 'building_num')
+      .exec();
+
+    if (!populatedRoom.building) {
+      throw new HttpException('Invalid Reference to Building', HttpStatus.BAD_REQUEST);
+    }
+
+    return populatedRoom;
   }
 
   updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {

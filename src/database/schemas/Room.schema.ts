@@ -1,21 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Resource } from './Resource.schema';
 import { Room as IRoom } from '../../modules/room/models/Room.model';
-import { v4 as uuidv4 } from 'uuid';
-import mongoose, { ObjectId } from 'mongoose';
 import { Building } from './Building.schema';
+import { Types } from 'mongoose';
 
 
 export type RoomDocument = Room & Document;
 
-@Schema()
+@Schema({ strict: false })
 export class Room implements IRoom {
   @Prop({
-    type: String, default: function genUUID() {
-      return uuidv4()
-    }
+    type: Types.ObjectId,
+    default: Types.ObjectId,
   })
-  _id: string;
+  _id: Types.ObjectId;
 
   @Prop()
   name: string;
@@ -29,8 +27,8 @@ export class Room implements IRoom {
   @Prop()
   resources: Resource[];
 
-  @Prop({ type: mongoose.Schema.Types.String, ref: 'Building' })
-  building: string;
+  @Prop({ type: Types.ObjectId, ref: 'Building' })
+  building: Types.ObjectId | Building;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);
