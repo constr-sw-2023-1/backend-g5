@@ -26,8 +26,8 @@ export class RoomController {
     return this.roomService.getAllRooms();
   }
 
-  @Unprotected()
   @Post()
+  @Unprotected()
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
   }
@@ -35,7 +35,7 @@ export class RoomController {
   @Get(':id')
   @Unprotected()
   async getRoomById(@Param('id') roomId: string) {
-    return this.roomService.getRoomsById(roomId);
+    return this.roomService.getRoomById(roomId);
   }
 
   @Put(':id')

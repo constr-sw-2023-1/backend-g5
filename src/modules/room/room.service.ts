@@ -6,7 +6,6 @@ import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { v4 as uuidv4 } from 'uuid';
-import { error } from 'console';
 
 
 @Injectable()
@@ -17,7 +16,14 @@ export class RoomService {
   ) { }
 
   async getAllRooms() {
-    return this.roomModel.find().exec();
+    try {
+      return this.roomModel
+        .find()
+        .populate('building', 'building_num')
+        .exec();
+    } catch (error) {
+      throw new HttpException('Error when fetching users', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
@@ -44,6 +50,19 @@ export class RoomService {
     return populatedRoom;
   }
 
+  async getRoomById(id: string): Promise<RoomDocument> {
+    try {
+      const user = await this.roomModel
+        .findById(id)
+        .populate('building', 'building_num')
+        .exec();
+      return user;
+    } catch (error) {
+      throw new HttpException('Error when fetching user by ID', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
   updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
     //ToDo
     return newResources;
@@ -51,13 +70,6 @@ export class RoomService {
   updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO) {
     //ToDo
     return udpatedRoom;
-  }
-  getRoomsById(id: string) {
-    try {
-      return this.roomModel.findById(id);
-    } catch (error) {
-      throw new Error("Domain error when finding room by ID.");
-    }
   }
 
   disableRoom(roomId: string) {
