@@ -22,7 +22,7 @@ export class RoomService {
         .populate('building', 'building_num')
         .exec();
     } catch (error) {
-      throw new HttpException('Error when fetching users', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Error when fetching rooms', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -58,7 +58,7 @@ export class RoomService {
         .exec();
       return user;
     } catch (error) {
-      throw new HttpException('Error when fetching user by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -72,8 +72,15 @@ export class RoomService {
     return udpatedRoom;
   }
 
-  disableRoom(roomId: string) {
-    //ToDo
-    return roomId;
+  async deleteRoom(roomId: string) {
+    try {
+      const msg = await this.roomModel
+        .deleteOne({_id:roomId})
+        .populate('building', 'building_num')
+        .exec();
+      return msg;
+    } catch (error) {
+      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+    }
   }
 }
