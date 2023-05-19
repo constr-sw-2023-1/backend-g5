@@ -3,12 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
 import { BuildingService } from './building.service';
 import { CreateBuildingRequestDTO } from './dto/CreateBuildingRequestDTO.model';
@@ -21,22 +23,46 @@ export class BuildingController {
 
   @Get()
   @Unprotected()
+  @HttpCode(HttpStatus.OK)
   async getAllBuildings() {
     return this.buildingService.getAllBuilding();
   }
 
+  @ApiBody({ type: CreateBuildingRequestDTO })
   @Post()
   @Unprotected()
+  @HttpCode(HttpStatus.CREATED)
   async createNewBuilding(@Body() building: CreateBuildingRequestDTO) {
     return this.buildingService.createNewBuilding(building);
   }
 
+  @ApiParam({
+    name: 'id',
+    description: 'Building ID',
+    type: 'string',
+    required: true,
+    example: '123',
+  })
   @Get(':id')
+  @Unprotected()
+  @HttpCode(HttpStatus.OK)
   async getBuildingById(@Param('id') buildingId: string) {
     return this.buildingService.getBuildingById(buildingId);
   }
 
+  @ApiParam({
+    name: 'id',
+    description: 'Building ID',
+    type: 'string',
+    required: true,
+    example: '123456',
+  })
+  @ApiBody({ 
+      type: UpdateBuildingRequestDTO
+    })
   @Put(':id')
+  @Unprotected()
+  @HttpCode(HttpStatus.OK)
   async updateBuilding(
     @Param('id') buildingId: string,
     @Body() udpatedBuilding: UpdateBuildingRequestDTO,
@@ -44,7 +70,16 @@ export class BuildingController {
     return this.buildingService.updateBuilding(buildingId, udpatedBuilding);
   }
 
+  @ApiParam({
+    name: 'id',
+    description: 'Building ID',
+    type: 'string',
+    required: true,
+    example: '123',
+  })
   @Delete(':id')
+  @Unprotected()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBuilding(@Param('id') buildingId: string) {
     return this.buildingService.disableBuilding(buildingId);
   }
