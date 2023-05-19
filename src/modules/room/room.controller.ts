@@ -100,6 +100,6 @@ export class RoomController {
   @Unprotected()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRoom(@Param('id') roomId: string) {
-    return this.roomService.disableRoom(roomId);
+    return this.roomService.deleteRoom(roomId);
   }
 }
