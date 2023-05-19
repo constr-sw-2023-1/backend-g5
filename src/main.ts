@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('[ROOMS] Construção de Software')
     .setVersion('1.0')
     .addTag('rooms')
+    .addTag('buildings')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
