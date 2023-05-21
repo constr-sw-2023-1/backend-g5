@@ -19,7 +19,7 @@ import { UpdateBuildingRequestDTO } from './dto/UpdateBuildingRequestDTO.model';
 @ApiTags('buildings')
 @Controller('building')
 export class BuildingController {
-  constructor(private readonly buildingService: BuildingService) { }
+  constructor(private readonly buildingService: BuildingService) {}
 
   @Get()
   @Unprotected()
@@ -57,17 +57,21 @@ export class BuildingController {
     required: true,
     example: '123456',
   })
-  @ApiBody({ 
-      type: UpdateBuildingRequestDTO
-    })
+  @ApiBody({
+    type: UpdateBuildingRequestDTO,
+  })
   @Put(':id')
   @Unprotected()
   @HttpCode(HttpStatus.OK)
   async updateBuilding(
     @Param('id') buildingId: string,
-    @Body() udpatedBuilding: UpdateBuildingRequestDTO,
+    @Body() updatedBuilding: UpdateBuildingRequestDTO,
   ) {
-    return this.buildingService.updateBuilding(buildingId, udpatedBuilding);
+    const updated = await this.buildingService.updateBuilding(
+      buildingId,
+      updatedBuilding,
+    );
+    return updated;
   }
 
   @ApiParam({
@@ -81,6 +85,6 @@ export class BuildingController {
   @Unprotected()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBuilding(@Param('id') buildingId: string) {
-    return this.buildingService.disableBuilding(buildingId);
+    return this.buildingService.deleteBuilding(buildingId);
   }
 }
