@@ -7,22 +7,21 @@ import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Injectable()
 export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) { }
+  ) {}
 
   async getAllRooms() {
     try {
-      return this.roomModel
-        .find()
-        .populate('building', 'building_num')
-        .exec();
+      return this.roomModel.find().populate('building', 'building_num').exec();
     } catch (error) {
-      throw new HttpException('Error when fetching rooms', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching rooms',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -44,7 +43,10 @@ export class RoomService {
       .exec();
 
     if (!populatedRoom.building) {
-      throw new HttpException('Invalid Reference to Building', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Invalid Reference to Building',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     return populatedRoom;
@@ -58,12 +60,17 @@ export class RoomService {
         .exec();
       return user;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching room by ID',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-
-  updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
+  updateRoomResource(
+    roomId: string,
+    newResources: UpdateRoomResourceRequestDTO,
+  ) {
     //ToDo
     return newResources;
   }
@@ -75,12 +82,52 @@ export class RoomService {
   async deleteRoom(roomId: string) {
     try {
       const msg = await this.roomModel
-        .deleteOne({_id:roomId})
+        .deleteOne({ _id: roomId })
         .populate('building', 'building_num')
         .exec();
       return msg;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching room by ID',
+        HttpStatus.BAD_REQUEST,
+      );
     }
+  }
+
+  async findRoomsByParams(params: any): Promise<Room[]> {
+    const query = this.roomModel.find();
+
+    for (const param in params) {
+      if (params.hasOwnProperty(param)) {
+        switch (param) {
+          case 'equals':
+            query.where(params[param]);
+            break;
+          case 'neq':
+            query.where(params[param]).ne(params[param]);
+            break;
+          case 'gt':
+            query.where(params[param]).gt(params[param]);
+            break;
+          case 'gteq':
+            query.where(params[param]).gte(params[param]);
+            break;
+          case 'lt':
+            query.where(params[param]).lt(params[param]);
+            break;
+          case 'lteq':
+            query.where(params[param]).lte(params[param]);
+            break;
+          case 'like':
+            const regex = new RegExp(params[param], 'i');
+            query.where(params[param]).regex(regex);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+
+    return query.exec();
   }
 }

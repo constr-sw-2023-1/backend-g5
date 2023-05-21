@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
@@ -16,11 +17,12 @@ import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { Unprotected } from 'nest-keycloak-connect';
+import { Room } from './models/Room.model';
 
 @ApiTags('rooms')
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) { }
+  constructor(private readonly roomService: RoomService) {}
 
   @Get()
   @Unprotected()
@@ -36,7 +38,6 @@ export class RoomController {
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
   }
-
 
   @ApiParam({
     name: 'id',
@@ -70,7 +71,6 @@ export class RoomController {
     return this.roomService.updateRoom(roomId, udpatedRoom);
   }
 
-
   @ApiParam({
     name: 'id',
     description: 'Room ID',
@@ -101,5 +101,11 @@ export class RoomController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRoom(@Param('id') roomId: string) {
     return this.roomService.deleteRoom(roomId);
+  }
+
+  @Unprotected()
+  @Get()
+  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+    return this.roomService.findRoomsByParams(params);
   }
 }
