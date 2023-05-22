@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Building, BuildingDocument } from 'src/database/schemas/Building.schema';
@@ -28,9 +28,16 @@ export class BuildingService {
     return this.buildingModel.find().exec();
   }
 
-  getBuildingById(id: string) {
-    //ToDo
-    return id;
+  async getBuildingById(id: string): Promise<BuildingDocument> {
+    try {
+      const building = await this.buildingModel
+        .findById(id)
+        .exec();
+
+      return building;
+    } catch (error) {
+      throw new HttpException('Error when fetching building by ID', HttpStatus.BAD_REQUEST);
+    }
   }
 
   updateBuilding(buildingId: string, udpatedBuilding: UpdateBuildingRequestDTO) {

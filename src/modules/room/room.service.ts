@@ -63,7 +63,7 @@ export class RoomService {
   }
 
 
-  async updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO) {
+  async updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO): Promise<RoomDocument> {
     try {
       const filter = {'_id': roomId};
       const update = { 
@@ -81,7 +81,7 @@ export class RoomService {
     }
   }
 
-  async updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO) {
+  async updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO): Promise<RoomDocument> {
     try {
       const filter = {'_id': roomId};
       const update = { 
