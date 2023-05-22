@@ -7,7 +7,6 @@ import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Injectable()
 export class RoomService {
   constructor(
@@ -17,12 +16,12 @@ export class RoomService {
 
   async getAllRooms() {
     try {
-      return this.roomModel
-        .find()
-        .populate('building', 'building_num')
-        .exec();
+      return this.roomModel.find().populate('building', 'building_num').exec();
     } catch (error) {
-      throw new HttpException('Error when fetching rooms', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching rooms',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -44,7 +43,10 @@ export class RoomService {
       .exec();
 
     if (!populatedRoom.building) {
-      throw new HttpException('Invalid Reference to Building', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Invalid Reference to Building',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     return populatedRoom;
@@ -52,39 +54,42 @@ export class RoomService {
 
   async getRoomById(id: string): Promise<RoomDocument> {
     try {
-      const user = await this.roomModel
+      const room = await this.roomModel
         .findById(id)
         .populate('building', 'building_num')
         .exec();
-      return user;
+      return room;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching room by ID',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
 
   async updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO): Promise<RoomDocument> {
     try {
-      const filter = {'_id': roomId};
-      const update = { 
+      const filter = { '_id': roomId };
+      const update = {
         resources: newResources
       };
 
-      const msg = await this.roomModel
-        .findOneAndUpdate(filter, update, {new: true})
+      const room = await this.roomModel
+        .findOneAndUpdate(filter, update, { new: true })
         .populate('building', 'building_num')
         .exec();
 
-      return msg;
+      return room;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Error when updating room', HttpStatus.BAD_REQUEST);
     }
   }
 
   async updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO): Promise<RoomDocument> {
     try {
-      const filter = {'_id': roomId};
-      const update = { 
+      const filter = { '_id': roomId };
+      const update = {
         name: udpatedRoom.name,
         capacity: udpatedRoom.capacity,
         floor: udpatedRoom.floor,
@@ -92,26 +97,29 @@ export class RoomService {
         building: udpatedRoom.building
       };
 
-      const msg = await this.roomModel
-        .findOneAndUpdate(filter, update, {new: true})
+      const room = await this.roomModel
+        .findOneAndUpdate(filter, update, { new: true })
         .populate('building', 'building_num')
         .exec();
 
-      return msg;
+      return room;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Error when updating room', HttpStatus.BAD_REQUEST);
     }
   }
 
   async deleteRoom(roomId: string) {
     try {
-      const msg = await this.roomModel
-        .deleteOne({_id:roomId})
+      const room = await this.roomModel
+        .deleteOne({ _id: roomId })
         .populate('building', 'building_num')
         .exec();
-      return msg;
+      return room;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when deleting room',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }
