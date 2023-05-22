@@ -12,7 +12,7 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) {}
+  ) { }
 
   async getAllRooms() {
     try {
@@ -67,31 +67,45 @@ export class RoomService {
     }
   }
 
-  async updateRoomResource(
-    roomId: string,
-    newResources: UpdateRoomResourceRequestDTO,
-  ) {
+
+  async updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO): Promise<RoomDocument> {
     try {
-      const room = await this.roomModel.findById(roomId);
-      if (!room) {
-        throw new Error('Room not found');
-      }
+      const filter = { '_id': roomId };
+      const update = {
+        resources: newResources
+      };
 
-      room.resources = newResources.resources;
-      const updatedRoom = await room.save();
+      const room = await this.roomModel
+        .findOneAndUpdate(filter, update, { new: true })
+        .populate('building', 'building_num')
+        .exec();
 
-      return updatedRoom;
+      return room;
     } catch (error) {
-      throw new HttpException(
-        'Error when deleting room',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Error when updating room', HttpStatus.BAD_REQUEST);
     }
   }
 
-  updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO) {
-    //ToDo
-    return udpatedRoom;
+  async updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO): Promise<RoomDocument> {
+    try {
+      const filter = { '_id': roomId };
+      const update = {
+        name: udpatedRoom.name,
+        capacity: udpatedRoom.capacity,
+        floor: udpatedRoom.floor,
+        resources: udpatedRoom.resources,
+        building: udpatedRoom.building
+      };
+
+      const room = await this.roomModel
+        .findOneAndUpdate(filter, update, { new: true })
+        .populate('building', 'building_num')
+        .exec();
+
+      return room;
+    } catch (error) {
+      throw new HttpException('Error when updating room', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async deleteRoom(roomId: string) {

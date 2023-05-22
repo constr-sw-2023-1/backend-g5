@@ -14,7 +14,7 @@ export class BuildingService {
   constructor(
     @InjectModel(Building.name)
     private readonly buildingModel: Model<BuildingDocument>,
-  ) {}
+  ) { }
 
   async createNewBuilding(
     building: CreateBuildingRequestDTO,
