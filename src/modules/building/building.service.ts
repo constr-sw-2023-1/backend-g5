@@ -45,8 +45,14 @@ export class BuildingService {
     return udpatedBuilding;
   }
 
-  disableBuilding(buildingId: string) {
-    //ToDo
-    return buildingId;
+  async disableBuilding(buildingId: string) {
+    try {
+      const msg = await this.buildingModel
+        .deleteOne({_id:buildingId})
+        .exec();
+      return msg;
+    } catch (error) {
+      throw new HttpException('Error when fetching building by ID', HttpStatus.BAD_REQUEST);
+    }
   }
 }
