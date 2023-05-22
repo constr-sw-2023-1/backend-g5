@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
@@ -25,16 +26,18 @@ export class RoomController {
   async getAllRooms() {
     return this.roomService.getAllRooms();
   }
+  
+  @Get('filter')
+  @Unprotected()
+  async getAllRoomsWithCapacity(@Query('capacity') capacity: number) {
+    return this.roomService.getAllRoomsWithCapacity(capacity);
+  }
 
   @Unprotected()
   @Post()
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
   
-  }
-  @Get()
-  async getAllRoomsWithCapacity(@Param('capacity') capacity: number) {
-    return this.roomService.getAllRoomsWithCapacity(capacity);
   }
 
   @Get(':id')
