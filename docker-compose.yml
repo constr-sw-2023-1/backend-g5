@@ -9,7 +9,7 @@ services:
     container_name: rooms
     build: .
     ports:
-      - 3000:3000
+      - 8085:8085
     networks:
       - cinco
     depends_on:
