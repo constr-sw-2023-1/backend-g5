@@ -54,11 +54,11 @@ export class RoomService {
 
   async getRoomById(id: string): Promise<RoomDocument> {
     try {
-      const user = await this.roomModel
+      const room = await this.roomModel
         .findById(id)
         .populate('building', 'building_num')
         .exec();
-      return user;
+      return room;
     } catch (error) {
       throw new HttpException(
         'Error when fetching room by ID',
@@ -77,15 +77,15 @@ export class RoomService {
         resources: newResources,
       };
 
-      const msg = await this.roomModel
+      const room = await this.roomModel
         .findOneAndUpdate(filter, update, { new: true })
         .populate('building', 'building_num')
         .exec();
 
-      return msg;
+      return room;
     } catch (error) {
       throw new HttpException(
-        'Error when fetching room by ID',
+        'Error when updating room',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -105,15 +105,15 @@ export class RoomService {
         building: udpatedRoom.building,
       };
 
-      const msg = await this.roomModel
+      const room = await this.roomModel
         .findOneAndUpdate(filter, update, { new: true })
         .populate('building', 'building_num')
         .exec();
 
-      return msg;
+      return room;
     } catch (error) {
       throw new HttpException(
-        'Error when fetching room by ID',
+        'Error when updating room',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -121,14 +121,14 @@ export class RoomService {
 
   async deleteRoom(roomId: string) {
     try {
-      const msg = await this.roomModel
+      const room = await this.roomModel
         .deleteOne({ _id: roomId })
         .populate('building', 'building_num')
         .exec();
-      return msg;
+      return room;
     } catch (error) {
       throw new HttpException(
-        'Error when fetching room by ID',
+        'Error when deleting room',
         HttpStatus.BAD_REQUEST,
       );
     }

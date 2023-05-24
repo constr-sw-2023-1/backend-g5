@@ -63,9 +63,13 @@ export class BuildingController {
   @HttpCode(HttpStatus.OK)
   async updateBuilding(
     @Param('id') buildingId: string,
-    @Body() udpatedBuilding: UpdateBuildingRequestDTO,
+    @Body() updatedBuilding: UpdateBuildingRequestDTO,
   ) {
-    return this.buildingService.updateBuilding(buildingId, udpatedBuilding);
+    const updated = await this.buildingService.updateBuilding(
+      buildingId,
+      updatedBuilding,
+    );
+    return updated;
   }
 
   @ApiParam({
@@ -78,6 +82,6 @@ export class BuildingController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBuilding(@Param('id') buildingId: string) {
-    return this.buildingService.disableBuilding(buildingId);
+    return this.buildingService.deleteBuilding(buildingId);
   }
 }
