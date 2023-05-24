@@ -11,6 +11,7 @@ import {
   Put,
   Query,
   UseGuards,
+  Roles,
 } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
@@ -25,10 +26,12 @@ import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { Room } from 'src/database/schemas/Room.schema';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
+import { RoleAuthGuard } from 'src/guards/RoleAuthGuard';
 
 @ApiBearerAuth('Authorization')
 @ApiTags('rooms')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RoleAuthGuard)
+@Roles('admin')
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) { }
