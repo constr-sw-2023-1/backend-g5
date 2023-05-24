@@ -12,7 +12,7 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) {}
+  ) { }
 
   async getAllRooms() {
     try {
@@ -178,5 +178,9 @@ export class RoomService {
 
     const query = this.roomModel.find(conditions);
     return query.exec();
+  }
+
+  async findAllRoomsWithCapacity(capacity: number) {
+    return this.roomModel.find({ capacity: { $gt: capacity } });
   }
 }

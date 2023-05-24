@@ -31,12 +31,19 @@ import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 @UseGuards(JwtAuthGuard)
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly roomService: RoomService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllRooms() {
     return this.roomService.getAllRooms();
+  }
+
+  @Get('simple-equery')
+  @ApiQuery({ name: 'capacity', type: 'number', required: true })
+  @HttpCode(HttpStatus.OK)
+  async findRoomsBySimpleQuery(@Query() capacity: number): Promise<Room[]> {
+    return this.roomService.findAllRoomsWithCapacity(capacity);
   }
 
   @Get('query')
@@ -51,6 +58,7 @@ export class RoomController {
   @HttpCode(HttpStatus.CREATED)
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
+
   }
 
   @ApiParam({
