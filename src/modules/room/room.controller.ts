@@ -10,36 +10,44 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { RoomService } from './room.service';
-import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
-import { Unprotected } from 'nest-keycloak-connect';
-import { Room } from './models/Room.model';
+import { Room } from 'src/database/schemas/Room.schema';
+import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 
+@ApiBearerAuth('Authorization')
 @ApiTags('rooms')
+@UseGuards(JwtAuthGuard)
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Get()
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async getAllRooms() {
     return this.roomService.getAllRooms();
   }
 
   @Get('query')
-  @Unprotected()
+  @ApiQuery({ name: 'query', type: 'string', required: false })
+  @HttpCode(HttpStatus.OK)
   async findRoomsByParams(@Query() params: any): Promise<Room[]> {
     return this.roomService.findRoomsByParams(params);
   }
 
   @ApiBody({ type: CreateRoomRequestDTO })
   @Post()
-  @Unprotected()
   @HttpCode(HttpStatus.CREATED)
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
@@ -53,7 +61,6 @@ export class RoomController {
     example: '123',
   })
   @Get(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async getRoomById(@Param('id') roomId: string) {
     return this.roomService.getRoomById(roomId);
@@ -68,7 +75,6 @@ export class RoomController {
   })
   @ApiBody({ type: UpdateRoomRequestDTO })
   @Put(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async updateRoom(
     @Param('id') roomId: string,
@@ -86,7 +92,6 @@ export class RoomController {
   })
   @ApiBody({ type: UpdateRoomResourceRequestDTO })
   @Patch(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async patchRoomResource(
     @Param('id') roomId: string,
@@ -103,7 +108,6 @@ export class RoomController {
     example: '123',
   })
   @Delete(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRoom(@Param('id') roomId: string) {
     return this.roomService.deleteRoom(roomId);
