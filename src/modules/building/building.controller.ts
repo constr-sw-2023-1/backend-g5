@@ -6,23 +6,24 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Unprotected } from 'nest-keycloak-connect';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { BuildingService } from './building.service';
 import { CreateBuildingRequestDTO } from './dto/CreateBuildingRequestDTO.model';
 import { UpdateBuildingRequestDTO } from './dto/UpdateBuildingRequestDTO.model';
+import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 
+@ApiBearerAuth('Authorization')
 @ApiTags('buildings')
+@UseGuards(JwtAuthGuard)
 @Controller('building')
 export class BuildingController {
   constructor(private readonly buildingService: BuildingService) {}
 
   @Get()
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async getAllBuildings() {
     return this.buildingService.getAllBuilding();
@@ -30,7 +31,6 @@ export class BuildingController {
 
   @ApiBody({ type: CreateBuildingRequestDTO })
   @Post()
-  @Unprotected()
   @HttpCode(HttpStatus.CREATED)
   async createNewBuilding(@Body() building: CreateBuildingRequestDTO) {
     return this.buildingService.createNewBuilding(building);
@@ -44,7 +44,6 @@ export class BuildingController {
     example: '123',
   })
   @Get(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async getBuildingById(@Param('id') buildingId: string) {
     return this.buildingService.getBuildingById(buildingId);
@@ -61,7 +60,6 @@ export class BuildingController {
     type: UpdateBuildingRequestDTO,
   })
   @Put(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.OK)
   async updateBuilding(
     @Param('id') buildingId: string,
@@ -82,7 +80,6 @@ export class BuildingController {
     example: '123',
   })
   @Delete(':id')
-  @Unprotected()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBuilding(@Param('id') buildingId: string) {
     return this.buildingService.deleteBuilding(buildingId);

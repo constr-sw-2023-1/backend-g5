@@ -10,12 +10,16 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('rooms')
     .addTag('buildings')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'Authorization',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('docs', app, document, {});
 
-  await app.listen(3000);
+  await app.listen(8085);
 }
 bootstrap();

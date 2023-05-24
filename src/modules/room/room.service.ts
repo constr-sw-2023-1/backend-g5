@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Query } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
@@ -12,7 +12,7 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) { }
+  ) {}
 
   async getAllRooms() {
     try {
@@ -67,12 +67,14 @@ export class RoomService {
     }
   }
 
-
-  async updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO): Promise<RoomDocument> {
+  async updateRoomResource(
+    roomId: string,
+    newResources: UpdateRoomResourceRequestDTO,
+  ): Promise<RoomDocument> {
     try {
-      const filter = { '_id': roomId };
+      const filter = { _id: roomId };
       const update = {
-        resources: newResources
+        resources: newResources,
       };
 
       const room = await this.roomModel
@@ -82,19 +84,25 @@ export class RoomService {
 
       return room;
     } catch (error) {
-      throw new HttpException('Error when updating room', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when updating room',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  async updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO): Promise<RoomDocument> {
+  async updateRoom(
+    roomId: string,
+    udpatedRoom: UpdateRoomRequestDTO,
+  ): Promise<RoomDocument> {
     try {
-      const filter = { '_id': roomId };
+      const filter = { _id: roomId };
       const update = {
         name: udpatedRoom.name,
         capacity: udpatedRoom.capacity,
         floor: udpatedRoom.floor,
         resources: udpatedRoom.resources,
-        building: udpatedRoom.building
+        building: udpatedRoom.building,
       };
 
       const room = await this.roomModel
@@ -104,7 +112,10 @@ export class RoomService {
 
       return room;
     } catch (error) {
-      throw new HttpException('Error when updating room', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when updating room',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -121,5 +132,51 @@ export class RoomService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+    const conditions = {};
+
+    for (const param in params) {
+      if (params.hasOwnProperty(param)) {
+        const [operator, value] = params[param].split('}');
+        const field = param.replace('{', '');
+        const newOperator = operator.replace('{', '');
+
+        switch (newOperator) {
+          case 'equals':
+            conditions[field] = value;
+            break;
+          case 'neq':
+            conditions[field] = { $ne: value };
+            break;
+          case 'gt':
+            conditions[field] = { $gt: Number(value) };
+            break;
+          case 'gteq':
+            conditions[field] = { $gte: Number(value) };
+            break;
+          case 'lt':
+            conditions[field] = { $lt: Number(value) };
+            break;
+          case 'lteq':
+            conditions[field] = { $lte: Number(value) };
+            break;
+          case 'like':
+            const regex = new RegExp(value, 'i');
+            conditions[field] = { $regex: regex };
+            break;
+          case 'building':
+            const buildingId = new Types.ObjectId(value);
+            conditions['building'] = buildingId;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+
+    const query = this.roomModel.find(conditions);
+    return query.exec();
   }
 }
