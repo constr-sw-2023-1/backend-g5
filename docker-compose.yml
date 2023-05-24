@@ -1,9 +1,6 @@
 version: '3.4'
 networks:
   cinco:
-volumes:
-  keycloak-data:
-    external: true
 services:
   rooms:
     container_name: rooms
