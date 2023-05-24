@@ -10,6 +10,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('rooms')
     .addTag('buildings')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'Authorization',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
