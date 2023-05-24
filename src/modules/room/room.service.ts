@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Query } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
@@ -12,7 +12,7 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) { }
+  ) {}
 
   async getAllRooms() {
     try {
@@ -67,12 +67,14 @@ export class RoomService {
     }
   }
 
-
-  async updateRoomResource(roomId: string, newResources: UpdateRoomResourceRequestDTO): Promise<RoomDocument> {
+  async updateRoomResource(
+    roomId: string,
+    newResources: UpdateRoomResourceRequestDTO,
+  ): Promise<RoomDocument> {
     try {
-      const filter = { '_id': roomId };
+      const filter = { _id: roomId };
       const update = {
-        resources: newResources
+        resources: newResources,
       };
 
       const msg = await this.roomModel
@@ -82,19 +84,25 @@ export class RoomService {
 
       return msg;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching room by ID',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  async updateRoom(roomId: string, udpatedRoom: UpdateRoomRequestDTO): Promise<RoomDocument> {
+  async updateRoom(
+    roomId: string,
+    udpatedRoom: UpdateRoomRequestDTO,
+  ): Promise<RoomDocument> {
     try {
-      const filter = { '_id': roomId };
+      const filter = { _id: roomId };
       const update = {
         name: udpatedRoom.name,
         capacity: udpatedRoom.capacity,
         floor: udpatedRoom.floor,
         resources: udpatedRoom.resources,
-        building: udpatedRoom.building
+        building: udpatedRoom.building,
       };
 
       const msg = await this.roomModel
@@ -104,7 +112,10 @@ export class RoomService {
 
       return msg;
     } catch (error) {
-      throw new HttpException('Error when fetching room by ID', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error when fetching room by ID',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -123,33 +134,41 @@ export class RoomService {
     }
   }
 
-  async findRoomsByParams(params: any): Promise<Room[]> {
-    const query = this.roomModel.find();
+  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+    const conditions = {};
 
     for (const param in params) {
       if (params.hasOwnProperty(param)) {
-        switch (param) {
+        const [operator, value] = params[param].split('}');
+        const field = param.replace('{', '');
+        const newOperator = operator.replace('{', '');
+
+        switch (newOperator) {
           case 'equals':
-            query.where(params[param]);
+            conditions[field] = value;
             break;
           case 'neq':
-            query.where(params[param]).ne(params[param]);
+            conditions[field] = { $ne: value };
             break;
           case 'gt':
-            query.where(params[param]).gt(params[param]);
+            conditions[field] = { $gt: Number(value) };
             break;
           case 'gteq':
-            query.where(params[param]).gte(params[param]);
+            conditions[field] = { $gte: Number(value) };
             break;
           case 'lt':
-            query.where(params[param]).lt(params[param]);
+            conditions[field] = { $lt: Number(value) };
             break;
           case 'lteq':
-            query.where(params[param]).lte(params[param]);
+            conditions[field] = { $lte: Number(value) };
             break;
           case 'like':
-            const regex = new RegExp(params[param], 'i');
-            query.where(params[param]).regex(regex);
+            const regex = new RegExp(value, 'i');
+            conditions[field] = { $regex: regex };
+            break;
+          case 'building':
+            const buildingId = new Types.ObjectId(value);
+            conditions['building'] = buildingId;
             break;
           default:
             break;
@@ -157,6 +176,7 @@ export class RoomService {
       }
     }
 
+    const query = this.roomModel.find(conditions);
     return query.exec();
   }
 }

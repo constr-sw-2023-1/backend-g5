@@ -31,6 +31,12 @@ export class RoomController {
     return this.roomService.getAllRooms();
   }
 
+  @Get('query')
+  @Unprotected()
+  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+    return this.roomService.findRoomsByParams(params);
+  }
+
   @ApiBody({ type: CreateRoomRequestDTO })
   @Post()
   @Unprotected()
@@ -101,11 +107,5 @@ export class RoomController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRoom(@Param('id') roomId: string) {
     return this.roomService.deleteRoom(roomId);
-  }
-
-  @Unprotected()
-  @Get()
-  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
-    return this.roomService.findRoomsByParams(params);
   }
 }
