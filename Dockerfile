@@ -8,6 +8,6 @@ RUN npm install --quiet --no-optional --no-fund --loglevel=error
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 8085
 
 CMD ["npm", "run", "start:dev"]
