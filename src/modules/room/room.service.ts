@@ -181,6 +181,6 @@ export class RoomService {
   }
 
   async findAllRoomsWithCapacity(capacity: number) {
-    return this.roomModel.find({ capacity: { $gt: capacity } });
+    return this.roomModel.find({ capacity: { $gt: Number(capacity) } });
   }
 }

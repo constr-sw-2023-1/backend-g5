@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -39,11 +40,17 @@ export class RoomController {
     return this.roomService.getAllRooms();
   }
 
-  @Get('simple-equery')
+  @Get('greater-capacity')
   @ApiQuery({ name: 'capacity', type: 'number', required: true })
   @HttpCode(HttpStatus.OK)
-  async findRoomsBySimpleQuery(@Query() capacity: number): Promise<Room[]> {
-    return this.roomService.findAllRoomsWithCapacity(capacity);
+  async findRoomsBySimpleQuery(@Query('capacity') capacity: string): Promise<Room[]> {
+    const parsedCapacity = Number(capacity);
+
+    if (isNaN(parsedCapacity)) {
+      throw new BadRequestException('Invalid capacity value');
+    }
+
+    return this.roomService.findAllRoomsWithCapacity(parsedCapacity);
   }
 
   @Get('query')
