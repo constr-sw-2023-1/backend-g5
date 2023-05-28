@@ -20,7 +20,7 @@ import {
   ApiBody,
   ApiParam,
   ApiQuery,
-  ApiTags,
+  ApiTags
 } from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
@@ -54,11 +54,21 @@ export class RoomController {
   }
 
   @Get('query')
-  @ApiQuery({ name: 'query', type: 'string', required: false })
+  @ApiQuery({ name: 'name', type: 'string', required: false, example: '{like}sala' })
+  @ApiQuery({ name: 'floor', type: 'string', required: false, example: '{equals}4' })
+  @ApiQuery({ name: 'capacity', type: 'string', required: false,
+    description: 'equals / neq / gt / gteq / lt / lteq / like',
+    example: '{gt}20'})
   @HttpCode(HttpStatus.OK)
-  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+  async findRoomsByParams(@Query('capacity') capacity?: string, @Query('floor') floor?: string, @Query('name') name?: string): Promise<Room[]> {
+    const params: any = {};
+    if (name) params.name = name;
+    if (floor) params.floor = floor;
+    if (capacity) params.capacity = capacity;
+    
     return this.roomService.findRoomsByParams(params);
   }
+
 
   @ApiBody({ type: CreateRoomRequestDTO })
   @Post()
