@@ -6,6 +6,7 @@ import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { v4 as uuidv4 } from 'uuid';
+import * as qs from 'qs';
 
 @Injectable()
 export class RoomService {
@@ -134,7 +135,7 @@ export class RoomService {
     }
   }
 
-  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+  async findRoomsByParams(params: any): Promise<Room[]> {
     const conditions = {};
 
     for (const param in params) {
