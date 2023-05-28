@@ -3,9 +3,9 @@ import BaseException from './BaseException';
 
 class NotFoundException implements BaseException {
   source: string = 'Rooms API';
-  message: string = 'Resource Not Found';
-  status: HttpStatus = HttpStatus.NOT_FOUND;
-  code: string = 'G5-404';
+  message: string = 'Conflict with existing resource';
+  status: HttpStatus = HttpStatus.BAD_REQUEST;
+  code: string = 'G5-400';
   stack?: string[];
 
   constructor() {

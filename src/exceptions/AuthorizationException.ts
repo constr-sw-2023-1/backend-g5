@@ -2,10 +2,10 @@ import { HttpStatus } from '@nestjs/common';
 import BaseException from './BaseException';
 
 class NotFoundException implements BaseException {
-  source: string = 'Rooms API';
-  message: string = 'Resource Not Found';
-  status: HttpStatus = HttpStatus.NOT_FOUND;
-  code: string = 'G5-404';
+  source: string = 'Keycloak';
+  message: string = 'User is not authorized to access this resource';
+  status: HttpStatus = HttpStatus.FORBIDDEN;
+  code: string = 'G5-403';
   stack?: string[];
 
   constructor() {
