@@ -8,6 +8,7 @@ import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO
 import { v4 as uuidv4 } from 'uuid';
 import NotFoundException from 'src/exceptions/exception/NotFoundException';
 import ResourceAlreadyExistsException from 'src/exceptions/exception/ResourceAlreadyExistsException';
+import * as qs from 'qs';
 
 @Injectable()
 export class RoomService {
@@ -124,7 +125,7 @@ export class RoomService {
     }
   }
 
-  async findRoomsByParams(@Query() params: any): Promise<Room[]> {
+  async findRoomsByParams(params: any): Promise<Room[]> {
     try {
       const conditions = {};
 
