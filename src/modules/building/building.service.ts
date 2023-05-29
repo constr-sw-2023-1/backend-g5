@@ -8,13 +8,14 @@ import {
 import { CreateBuildingRequestDTO } from './dto/CreateBuildingRequestDTO.model';
 import { UpdateBuildingRequestDTO } from './dto/UpdateBuildingRequestDTO.model';
 import { v4 as uuidv4 } from 'uuid';
+import NotFoundException from 'src/exceptions/exception/NotFoundException';
 
 @Injectable()
 export class BuildingService {
   constructor(
     @InjectModel(Building.name)
     private readonly buildingModel: Model<BuildingDocument>,
-  ) { }
+  ) {}
 
   async createNewBuilding(
     building: CreateBuildingRequestDTO,
@@ -29,7 +30,11 @@ export class BuildingService {
   }
 
   async getAllBuilding() {
-    return this.buildingModel.find().exec();
+    try {
+      return this.buildingModel.find().exec();
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
   async getBuildingById(id: string): Promise<BuildingDocument> {
@@ -37,10 +42,7 @@ export class BuildingService {
       const building = await this.buildingModel.findById(id).exec();
       return building;
     } catch (error) {
-      throw new HttpException(
-        'Error when fetching building by ID',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new NotFoundException();
     }
   }
 
@@ -56,10 +58,7 @@ export class BuildingService {
       );
       return updated;
     } catch (error) {
-      throw new HttpException(
-        'Error when updating building',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new NotFoundException();
     }
   }
 
@@ -70,10 +69,7 @@ export class BuildingService {
         .exec();
       return building;
     } catch (error) {
-      throw new HttpException(
-        'Error when deleting room',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new NotFoundException();
     }
   }
 }

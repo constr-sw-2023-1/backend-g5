@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -15,7 +16,17 @@ import { BuildingService } from './building.service';
 import { CreateBuildingRequestDTO } from './dto/CreateBuildingRequestDTO.model';
 import { UpdateBuildingRequestDTO } from './dto/UpdateBuildingRequestDTO.model';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
+import { AuthenticationExceptionFilter } from 'src/exceptions/filters/AuthenticationExceptionFilter';
+import { AuthorizationExceptionFilter } from 'src/exceptions/filters/AuthorizationException';
+import { NotFoundExceptionFilter } from 'src/exceptions/filters/NotFoundExceptionFilter';
+import { ResourceAlreadyExistsExceptionFilter } from 'src/exceptions/filters/ResourceAlreadyExistsExceptionFilter';
 
+@UseFilters(
+  NotFoundExceptionFilter,
+  AuthenticationExceptionFilter,
+  AuthorizationExceptionFilter,
+  ResourceAlreadyExistsExceptionFilter,
+)
 @ApiBearerAuth('Authorization')
 @ApiTags('buildings')
 @UseGuards(JwtAuthGuard)

@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
@@ -26,13 +27,23 @@ import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { Room } from 'src/database/schemas/Room.schema';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
+import { AuthenticationExceptionFilter } from 'src/exceptions/filters/AuthenticationExceptionFilter';
+import { AuthorizationExceptionFilter } from 'src/exceptions/filters/AuthorizationException';
+import { NotFoundExceptionFilter } from 'src/exceptions/filters/NotFoundExceptionFilter';
+import { ResourceAlreadyExistsExceptionFilter } from 'src/exceptions/filters/ResourceAlreadyExistsExceptionFilter';
 
+@UseFilters(
+  NotFoundExceptionFilter,
+  AuthenticationExceptionFilter,
+  AuthorizationExceptionFilter,
+  ResourceAlreadyExistsExceptionFilter,
+)
 @ApiBearerAuth('Authorization')
 @ApiTags('rooms')
 @UseGuards(JwtAuthGuard)
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) { }
+  constructor(private readonly roomService: RoomService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -43,7 +54,9 @@ export class RoomController {
   @Get('greater-capacity')
   @ApiQuery({ name: 'capacity', type: 'number', required: true })
   @HttpCode(HttpStatus.OK)
-  async findRoomsBySimpleQuery(@Query('capacity') capacity: string): Promise<Room[]> {
+  async findRoomsBySimpleQuery(
+    @Query('capacity') capacity: string,
+  ): Promise<Room[]> {
     const parsedCapacity = Number(capacity);
 
     if (isNaN(parsedCapacity)) {
@@ -65,7 +78,6 @@ export class RoomController {
   @HttpCode(HttpStatus.CREATED)
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
-
   }
 
   @ApiParam({
