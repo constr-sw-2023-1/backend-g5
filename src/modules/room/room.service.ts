@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Query } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Room, RoomDocument } from 'src/database/schemas/Room.schema';
@@ -7,6 +7,7 @@ import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { v4 as uuidv4 } from 'uuid';
 import NotFoundException from 'src/exceptions/exception/NotFoundException';
+import ResourceAlreadyExistsException from 'src/exceptions/exception/ResourceAlreadyExistsException';
 
 @Injectable()
 export class RoomService {
@@ -68,6 +69,12 @@ export class RoomService {
       const update = {
         resources: newResources,
       };
+
+      const testRoom = await this.roomModel.findById(roomId);
+
+      if (testRoom.resources == newResources.resources) {
+        throw new ResourceAlreadyExistsException();
+      }
 
       const room = await this.roomModel
         .findOneAndUpdate(filter, update, { new: true })

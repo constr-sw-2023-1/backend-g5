@@ -1,19 +1,16 @@
-import { HttpStatus } from '@nestjs/common';
-import BaseException from './BaseException';
+import { HttpStatus, HttpException } from '@nestjs/common';
 
-class AuthenticationException implements BaseException {
-  source: string = 'Keycloak';
-  message: string = 'Could not validate the provided credentials';
-  status: HttpStatus = HttpStatus.UNAUTHORIZED;
-  code: string = 'G5-401';
-  stack?: string[];
-
+class AuthenticationException extends HttpException {
   constructor() {
-    const error = new Error();
-    Error.captureStackTrace(error, AuthenticationException);
-    this.stack = error.stack
-      ? error.stack.split('\n').map((line) => line.trim())
-      : [];
+    const errorMessage = 'Could not validate the provided credentials';
+    const errorObject = {
+      message: errorMessage,
+      code: 'G5-401',
+      source: 'Keycloak',
+      stack: new Error(errorMessage).stack,
+    };
+
+    super(errorObject, HttpStatus.UNAUTHORIZED);
   }
 }
 

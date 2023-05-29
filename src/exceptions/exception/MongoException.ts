@@ -1,19 +1,16 @@
-import { HttpStatus } from '@nestjs/common';
-import BaseException from './BaseException';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-class MongoException implements BaseException {
-  source: string = 'Mongo';
-  message: string = 'An error has occurred with MongoDB';
-  status: HttpStatus = HttpStatus.BAD_REQUEST;
-  code: string = 'G5-400';
-  stack?: string[];
-
+class MongoException extends HttpException {
   constructor() {
-    const error = new Error();
-    Error.captureStackTrace(error, MongoException);
-    this.stack = error.stack
-      ? error.stack.split('\n').map((line) => line.trim())
-      : [];
+    const errorMessage = 'An error has occurred with MongoDB';
+    const errorObject = {
+      message: errorMessage,
+      code: 'G5-400',
+      source: 'MongoDB',
+      stack: new Error(errorMessage).stack,
+    };
+
+    super(errorObject, HttpStatus.BAD_REQUEST);
   }
 }
 

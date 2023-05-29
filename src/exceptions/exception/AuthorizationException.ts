@@ -1,19 +1,16 @@
-import { HttpStatus } from '@nestjs/common';
-import BaseException from './BaseException';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-class AuthorizationException implements BaseException {
-  source: string = 'Keycloak';
-  message: string = 'User is not authorized to access this resource';
-  status: HttpStatus = HttpStatus.FORBIDDEN;
-  code: string = 'G5-403';
-  stack?: string[];
-
+class AuthorizationException extends HttpException {
   constructor() {
-    const error = new Error();
-    Error.captureStackTrace(error, AuthorizationException);
-    this.stack = error.stack
-      ? error.stack.split('\n').map((line) => line.trim())
-      : [];
+    const errorMessage = 'User is not authorized to access this resource';
+    const errorObject = {
+      message: errorMessage,
+      code: 'G5-403',
+      source: 'Keycloak',
+      stack: new Error(errorMessage).stack,
+    };
+
+    super(errorObject, HttpStatus.UNAUTHORIZED);
   }
 }
 

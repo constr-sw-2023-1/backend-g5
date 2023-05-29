@@ -1,19 +1,16 @@
-import { HttpStatus } from '@nestjs/common';
-import BaseException from './BaseException';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-class ResourceAlreadyExistsException implements BaseException {
-  source: string = 'Rooms API';
-  message: string = 'Conflict with existing resource';
-  status: HttpStatus = HttpStatus.BAD_REQUEST;
-  code: string = 'G5-400';
-  stack?: string[];
-
+class ResourceAlreadyExistsException extends HttpException {
   constructor() {
-    const error = new Error();
-    Error.captureStackTrace(error, ResourceAlreadyExistsException);
-    this.stack = error.stack
-      ? error.stack.split('\n').map((line) => line.trim())
-      : [];
+    const errorMessage = 'Conflict with existing resource';
+    const errorObject = {
+      message: errorMessage,
+      code: 'G5-400',
+      source: 'Rooms API',
+      stack: new Error(errorMessage).stack,
+    };
+
+    super(errorObject, HttpStatus.BAD_REQUEST);
   }
 }
 

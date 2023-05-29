@@ -1,19 +1,16 @@
-import { HttpStatus } from '@nestjs/common';
-import BaseException from './BaseException';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-class NotFoundException implements BaseException {
-  source: string = 'Rooms API';
-  message: string = 'Resource Not Found';
-  status: HttpStatus = HttpStatus.NOT_FOUND;
-  code: string = 'G5-404';
-  stack?: string[];
-
+class NotFoundException extends HttpException {
   constructor() {
-    const error = new Error();
-    Error.captureStackTrace(error, NotFoundException);
-    this.stack = error.stack
-      ? error.stack.split('\n').map((line) => line.trim())
-      : [];
+    const errorMessage = 'Resource Not Found';
+    const errorObject = {
+      message: errorMessage,
+      code: 'G5-404',
+      source: 'Rooms API',
+      stack: new Error(errorMessage).stack,
+    };
+
+    super(errorObject, HttpStatus.NOT_FOUND);
   }
 }
 

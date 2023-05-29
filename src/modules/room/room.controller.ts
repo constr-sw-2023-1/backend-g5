@@ -27,17 +27,7 @@ import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
 import { Room } from 'src/database/schemas/Room.schema';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
-import { AuthenticationExceptionFilter } from 'src/exceptions/filters/AuthenticationExceptionFilter';
-import { AuthorizationExceptionFilter } from 'src/exceptions/filters/AuthorizationException';
-import { NotFoundExceptionFilter } from 'src/exceptions/filters/NotFoundExceptionFilter';
-import { ResourceAlreadyExistsExceptionFilter } from 'src/exceptions/filters/ResourceAlreadyExistsExceptionFilter';
 
-@UseFilters(
-  NotFoundExceptionFilter,
-  AuthenticationExceptionFilter,
-  AuthorizationExceptionFilter,
-  ResourceAlreadyExistsExceptionFilter,
-)
 @ApiBearerAuth('Authorization')
 @ApiTags('rooms')
 @UseGuards(JwtAuthGuard)

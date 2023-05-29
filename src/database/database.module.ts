@@ -1,14 +1,23 @@
-import { Module, UseFilters } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MongoExceptionFilter } from 'src/exceptions/filters/MongoExceptionFilter';
+import MongoException from 'src/exceptions/exception/MongoException';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb://root:root@database/writeapp?authSource=admin',
-    ),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: 'mongodb://root:root@database/writeapp?authSource=admin',
+        connectionFactory: (connection) => {
+          connection.on('error', (error) => {
+            if (error.message.includes('getaddrinfo EAI_AGAIN')) {
+              throw new MongoException();
+            }
+          });
+          return connection;
+        },
+      }),
+    }),
   ],
   controllers: [],
 })
-@UseFilters(MongoExceptionFilter)
 export class DatabaseModule {}
