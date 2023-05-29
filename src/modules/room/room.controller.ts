@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { CreateRoomRequestDTO } from './dto/CreateRoomRequestDTO.model';
@@ -32,7 +33,7 @@ import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 @UseGuards(JwtAuthGuard)
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) { }
+  constructor(private readonly roomService: RoomService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -43,7 +44,9 @@ export class RoomController {
   @Get('greater-capacity')
   @ApiQuery({ name: 'capacity', type: 'number', required: true })
   @HttpCode(HttpStatus.OK)
-  async findRoomsBySimpleQuery(@Query('capacity') capacity: string): Promise<Room[]> {
+  async findRoomsBySimpleQuery(
+    @Query('capacity') capacity: string,
+  ): Promise<Room[]> {
     const parsedCapacity = Number(capacity);
 
     if (isNaN(parsedCapacity)) {
@@ -75,7 +78,6 @@ export class RoomController {
   @HttpCode(HttpStatus.CREATED)
   async createNewRoom(@Body() room: CreateRoomRequestDTO) {
     return this.roomService.createNewRoom(room);
-
   }
 
   @ApiParam({

@@ -1,5 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import AuthenticationException from 'src/exceptions/exception/AuthenticationException';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -13,6 +14,6 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    return false;
+    throw new AuthenticationException();
   }
 }
