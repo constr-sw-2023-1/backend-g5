@@ -59,15 +59,17 @@ export class RoomController {
   @Get('query')
   @ApiQuery({ name: 'name', type: 'string', required: false, example: '{like}sala' })
   @ApiQuery({ name: 'floor', type: 'string', required: false, example: '{equals}4' })
+  @ApiQuery({ name: 'active', type: 'string', required: false, example: '{equals}true' })
   @ApiQuery({ name: 'capacity', type: 'string', required: false,
     description: 'equals / neq / gt / gteq / lt / lteq / like',
     example: '{gt}20'})
   @HttpCode(HttpStatus.OK)
-  async findRoomsByParams(@Query('capacity') capacity?: string, @Query('floor') floor?: string, @Query('name') name?: string): Promise<Room[]> {
+  async findRoomsByParams(@Query('capacity') capacity?: string, @Query('floor') floor?: string, @Query('name') name?: string, @Query('active') active?: string): Promise<Room[]> {
     const params: any = {};
     if (name) params.name = name;
     if (floor) params.floor = floor;
     if (capacity) params.capacity = capacity;
+    if (active) params.active = active;
     
     return this.roomService.findRoomsByParams(params);
   }
@@ -139,4 +141,5 @@ export class RoomController {
   async deleteRoom(@Param('id') roomId: string) {
     return this.roomService.deleteRoom(roomId);
   }
+
 }

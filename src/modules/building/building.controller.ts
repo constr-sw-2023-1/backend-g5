@@ -34,15 +34,17 @@ export class BuildingController {
   @Get('query')
   @ApiQuery({ name: 'building_num', type: 'string', required: false, example: '{gt}2' })
   @ApiQuery({ name: 'name', type: 'string', required: false, example: '{like}central' })
+  @ApiQuery({ name: 'active', type: 'string', required: false, example: '{equals}true' })
   @ApiQuery({ name: 'campus', type: 'string', required: false,
     description: 'equals / neq / gt / gteq / lt / lteq / like',
     example: '{like}universitario'})
   @HttpCode(HttpStatus.OK)
-  async findBuildingsByParams(@Query('campus') campus?: string, @Query('name') name?: string, @Query('building_num') building_num?: string): Promise<Building[]> {
+  async findBuildingsByParams(@Query('campus') campus?: string, @Query('name') name?: string, @Query('building_num') building_num?: string, @Query('active') active?: string): Promise<Building[]> {
     const params: any = {};
     if (name) params.name = name;
     if (building_num) params.building_num = building_num;
     if (campus) params.campus = campus;
+    if (active) params.active = active;
     
     return this.buildingService.findBuildingsByParams(params);
   }

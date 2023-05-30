@@ -22,6 +22,7 @@ export class BuildingService {
   ): Promise<BuildingDocument> {
     const newBuilding = new this.buildingModel({
       _id: uuidv4(),
+      active: true,
       building_num: building.building_num,
       name: building.name,
       campus: building.campus,
@@ -31,7 +32,7 @@ export class BuildingService {
 
   async getAllBuilding() {
     try {
-      return this.buildingModel.find().exec();
+      return this.buildingModel.find({active: true}).exec();
     } catch (error) {
       throw new NotFoundException();
     }
@@ -39,7 +40,7 @@ export class BuildingService {
 
   async getBuildingById(id: string): Promise<BuildingDocument> {
     try {
-      const building = await this.buildingModel.findById(id).exec();
+      const building = await this.buildingModel.find({active: true}).findById(id).exec();
       return building;
     } catch (error) {
       throw new NotFoundException();
@@ -52,7 +53,7 @@ export class BuildingService {
   ) {
     try {
       const updated = await this.buildingModel.findOneAndUpdate(
-        { buildingId },
+        { _id: buildingId, active: true },
         updatedBuilding,
         { new: true },
       );
@@ -63,6 +64,21 @@ export class BuildingService {
   }
 
   async deleteBuilding(buildingId: string) {
+    try {
+      const filter = { _id: buildingId };
+      const update = { active: false };
+
+      const building = await this.buildingModel
+        .findOneAndUpdate(filter, update, { new: true })
+        .exec();
+
+      return building;
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
+  async deleteBuildingPermanently(buildingId: string) {
     try {
       const building = await this.buildingModel
         .deleteOne({ _id: buildingId })

@@ -4,6 +4,7 @@ import { Resource } from './Resource.model';
 
 export interface Room {
   _id: Types.ObjectId;
+  active: boolean;
   name: string;
   capacity: number;
   floor: number;

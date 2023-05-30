@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Building as IBuilding } from '../../modules/building/models/Building.model';
-import { Types } from 'mongoose';
+import { BooleanExpression, Types } from 'mongoose';
 
 
 export type BuildingDocument = Building & Document;
@@ -12,6 +12,9 @@ export class Building implements IBuilding {
     default: Types.ObjectId,
   })
   _id: Types.ObjectId;
+
+  @Prop()
+  active: boolean;
 
   @Prop()
   building_num: number;
