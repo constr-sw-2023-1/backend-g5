@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import {
   Building,
   BuildingDocument,
@@ -72,4 +72,51 @@ export class BuildingService {
       throw new NotFoundException();
     }
   }
+
+  async findBuildingsByParams(params: any): Promise<Building[]> {
+    try {
+      const conditions = {};
+
+      for (const param in params) {
+        if (params.hasOwnProperty(param)) {
+          const [operator, value] = params[param].split('}');
+          const field = param.replace('{', '');
+          const newOperator = operator.replace('{', '');
+
+          switch (newOperator) {
+            case 'equals':
+              conditions[field] = value;
+              break;
+            case 'neq':
+              conditions[field] = { $ne: value };
+              break;
+            case 'gt':
+              conditions[field] = { $gt: Number(value) };
+              break;
+            case 'gteq':
+              conditions[field] = { $gte: Number(value) };
+              break;
+            case 'lt':
+              conditions[field] = { $lt: Number(value) };
+              break;
+            case 'lteq':
+              conditions[field] = { $lte: Number(value) };
+              break;
+            case 'like':
+              const regex = new RegExp(value, 'i');
+              conditions[field] = { $regex: regex };
+              break;
+            default:
+              break;
+          }
+        }
+      }
+
+      const query = this.buildingModel.find(conditions);
+      return query.exec();
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
 }
