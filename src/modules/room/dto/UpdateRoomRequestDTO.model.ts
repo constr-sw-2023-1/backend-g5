@@ -18,8 +18,4 @@ export class UpdateRoomRequestDTO {
   @ApiProperty()
   @IsNotEmpty()
   resources: Resource[];
-
-  @ApiProperty()
-  @IsNotEmpty()
-  building: string;
 }

@@ -15,7 +15,7 @@ export class BuildingService {
   constructor(
     @InjectModel(Building.name)
     private readonly buildingModel: Model<BuildingDocument>,
-  ) {}
+  ) { }
 
   async createNewBuilding(
     building: CreateBuildingRequestDTO,
@@ -32,7 +32,7 @@ export class BuildingService {
 
   async getAllBuilding() {
     try {
-      return this.buildingModel.find({active: true}).exec();
+      return this.buildingModel.find({ active: true }).exec();
     } catch (error) {
       throw new NotFoundException();
     }
@@ -40,7 +40,7 @@ export class BuildingService {
 
   async getBuildingById(id: string): Promise<BuildingDocument> {
     try {
-      const building = await this.buildingModel.find({active: true}).findById(id).exec();
+      const building = await this.buildingModel.findById(id).exec();
       return building;
     } catch (error) {
       throw new NotFoundException();

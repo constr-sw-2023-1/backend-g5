@@ -15,11 +15,11 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) {}
+  ) { }
 
   async getAllRooms() {
     try {
-      return this.roomModel.find({active: true}).populate('building', 'building_num').exec();
+      return this.roomModel.find({ active: true }).populate('building', 'building_num').exec();
     } catch (error) {
       throw new NotFoundException();
     }
@@ -53,7 +53,6 @@ export class RoomService {
   async getRoomById(id: string): Promise<RoomDocument> {
     try {
       const room = await this.roomModel
-        .find({active: true})
         .findById(id)
         .populate('building', 'building_num')
         .exec();
@@ -101,7 +100,6 @@ export class RoomService {
         capacity: udpatedRoom.capacity,
         floor: udpatedRoom.floor,
         resources: udpatedRoom.resources,
-        building: udpatedRoom.building,
       };
 
       const room = await this.roomModel
