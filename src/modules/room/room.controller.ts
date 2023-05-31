@@ -21,7 +21,7 @@ import {
   ApiBody,
   ApiParam,
   ApiQuery,
-  ApiTags
+  ApiTags,
 } from '@nestjs/swagger';
 import { UpdateRoomRequestDTO } from './dto/UpdateRoomRequestDTO.model';
 import { UpdateRoomResourceRequestDTO } from './dto/UpdateRoomResourceRequestDTO.model';
@@ -37,41 +37,49 @@ export class RoomController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAllRooms() {
-    return this.roomService.getAllRooms();
-  }
-
-  @Get('greater-capacity')
-  @ApiQuery({ name: 'capacity', type: 'number', required: true })
-  @HttpCode(HttpStatus.OK)
-  async findRoomsBySimpleQuery(
-    @Query('capacity') capacity: string,
-  ): Promise<Room[]> {
-    const parsedCapacity = Number(capacity);
-
-    if (isNaN(parsedCapacity)) {
-      throw new BadRequestException('Invalid capacity value');
-    }
-
-    return this.roomService.findAllRoomsWithCapacity(parsedCapacity);
-  }
-
-  @Get('query')
-  @ApiQuery({ name: 'name', type: 'string', required: false, example: '{like}sala' })
-  @ApiQuery({ name: 'floor', type: 'string', required: false, example: '{equals}4' })
-  @ApiQuery({ name: 'capacity', type: 'string', required: false,
+  @ApiQuery({
+    name: 'name',
+    type: 'string',
+    required: false,
+    example: '{like}sala',
+  })
+  @ApiQuery({
+    name: 'floor',
+    type: 'string',
+    required: false,
+    example: '{equals}4',
+  })
+  @ApiQuery({
+    name: 'capacity',
+    type: 'string',
+    required: false,
     description: 'equals / neq / gt / gteq / lt / lteq / like',
-    example: '{gt}20'})
-  @HttpCode(HttpStatus.OK)
-  async findRoomsByParams(@Query('capacity') capacity?: string, @Query('floor') floor?: string, @Query('name') name?: string): Promise<Room[]> {
-    const params: any = {};
-    if (name) params.name = name;
-    if (floor) params.floor = floor;
-    if (capacity) params.capacity = capacity;
-    
-    return this.roomService.findRoomsByParams(params);
-  }
+    example: '{gt}20',
+  })
+  async getAllRooms(
+    @Query('capacity') capacity?: string,
+    @Query('floor') floor?: string,
+    @Query('name') name?: string,
+  ): Promise<Room[]> {
+    if (capacity && floor && name) {
+      const params: any = {};
+      params.name = name;
+      params.floor = floor;
+      params.capacity = capacity;
 
+      return this.roomService.findRoomsByParams(params);
+    } else if (capacity) {
+      const parsedCapacity = Number(capacity);
+
+      if (isNaN(parsedCapacity)) {
+        throw new BadRequestException('Invalid capacity value');
+      }
+
+      return this.roomService.findAllRoomsWithCapacity(parsedCapacity);
+    } else {
+      return this.roomService.getAllRooms();
+    }
+  }
 
   @ApiBody({ type: CreateRoomRequestDTO })
   @Post()
