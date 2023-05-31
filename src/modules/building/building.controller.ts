@@ -28,7 +28,7 @@ import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 @UseGuards(JwtAuthGuard)
 @Controller('building')
 export class BuildingController {
-  constructor(private readonly buildingService: BuildingService) {}
+  constructor(private readonly buildingService: BuildingService) { }
 
   @Get()
   @ApiQuery({
@@ -50,17 +50,20 @@ export class BuildingController {
     description: 'equals / neq / gt / gteq / lt / lteq / like',
     example: '{like}universitario',
   })
+  @ApiQuery({ name: 'active', type: 'string', required: false, example: '{equals}true' })
   @HttpCode(HttpStatus.OK)
   async getAllBuildings(
     @Query('campus') campus?: string,
     @Query('name') name?: string,
     @Query('building_num') building_num?: string,
+    @Query('active') active?: string,
   ) {
     if (campus && building_num && name) {
       const params: any = {};
       params.name = name;
       params.building_num = building_num;
       params.campus = campus;
+      params.active = active;
 
       return this.buildingService.findBuildingsByParams(params);
     } else {

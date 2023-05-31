@@ -19,6 +19,9 @@ export class Room implements IRoom {
   name: string;
 
   @Prop()
+  active: boolean;
+
+  @Prop()
   capacity: number;
 
   @Prop()

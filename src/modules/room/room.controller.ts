@@ -33,7 +33,7 @@ import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 @UseGuards(JwtAuthGuard)
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly roomService: RoomService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -56,16 +56,19 @@ export class RoomController {
     description: 'equals / neq / gt / gteq / lt / lteq / like',
     example: '{gt}20',
   })
+  @ApiQuery({ name: 'active', type: 'string', required: false, example: '{equals}true' })
   async getAllRooms(
     @Query('capacity') capacity?: string,
     @Query('floor') floor?: string,
     @Query('name') name?: string,
+    @Query('active') active?: string,
   ): Promise<Room[]> {
     if (capacity && floor && name) {
       const params: any = {};
       params.name = name;
       params.floor = floor;
       params.capacity = capacity;
+      params.active = active;
 
       return this.roomService.findRoomsByParams(params);
     } else if (capacity) {
@@ -147,4 +150,5 @@ export class RoomController {
   async deleteRoom(@Param('id') roomId: string) {
     return this.roomService.deleteRoom(roomId);
   }
+
 }

@@ -15,11 +15,11 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name)
     private readonly roomModel: Model<RoomDocument>,
-  ) {}
+  ) { }
 
   async getAllRooms() {
     try {
-      return this.roomModel.find().populate('building', 'building_num').exec();
+      return this.roomModel.find({ active: true }).populate('building', 'building_num').exec();
     } catch (error) {
       throw new NotFoundException();
     }
@@ -28,6 +28,7 @@ export class RoomService {
   async createNewRoom(room: CreateRoomRequestDTO): Promise<RoomDocument> {
     const newRoom = new this.roomModel({
       _id: uuidv4(),
+      active: true,
       name: room.name,
       capacity: room.capacity,
       floor: room.floor,
@@ -66,7 +67,7 @@ export class RoomService {
     newResources: UpdateRoomResourceRequestDTO,
   ): Promise<RoomDocument> {
     try {
-      const filter = { _id: roomId };
+      const filter = { _id: roomId, active: true };
       const update = {
         resources: newResources,
       };
@@ -93,13 +94,12 @@ export class RoomService {
     udpatedRoom: UpdateRoomRequestDTO,
   ): Promise<RoomDocument> {
     try {
-      const filter = { _id: roomId };
+      const filter = { _id: roomId, active: true };
       const update = {
         name: udpatedRoom.name,
         capacity: udpatedRoom.capacity,
         floor: udpatedRoom.floor,
         resources: udpatedRoom.resources,
-        building: udpatedRoom.building,
       };
 
       const room = await this.roomModel
@@ -114,6 +114,22 @@ export class RoomService {
   }
 
   async deleteRoom(roomId: string) {
+    try {
+      const filter = { _id: roomId };
+      const update = { active: false };
+
+      const room = await this.roomModel
+        .findOneAndUpdate(filter, update, { new: true })
+        .populate('building', 'building_num')
+        .exec();
+
+      return room;
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
+  async deleteRoomPermanently(roomId: string) {
     try {
       const room = await this.roomModel
         .deleteOne({ _id: roomId })
@@ -177,7 +193,7 @@ export class RoomService {
 
   async findAllRoomsWithCapacity(capacity: number) {
     try {
-      return this.roomModel.find({ capacity: { $gt: Number(capacity) } });
+      return this.roomModel.find({ capacity: { $gt: Number(capacity) }, active: true });
     } catch (error) {
       throw new NotFoundException();
     }
