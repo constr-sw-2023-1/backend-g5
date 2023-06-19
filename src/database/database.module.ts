@@ -6,7 +6,7 @@ import MongoException from 'src/exceptions/exception/MongoException';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: () => ({
-        uri: 'mongodb://root:root@database/writeapp?authSource=admin',
+        uri: 'mongodb://root:root@mongodb/writeapp?authSource=admin',
         connectionFactory: (connection) => {
           connection.on('error', (error) => {
             if (error.message.includes('getaddrinfo EAI_AGAIN')) {
@@ -20,4 +20,4 @@ import MongoException from 'src/exceptions/exception/MongoException';
   ],
   controllers: [],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }

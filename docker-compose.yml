@@ -10,9 +10,9 @@ services:
     networks:
       - cinco
     depends_on:
-      - database
+      - mongodb
 
-  database:
+  mongodb:
     container_name: mongo
     image: mongo:latest
     ports:
