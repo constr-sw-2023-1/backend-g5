@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import MongoException from 'src/exceptions/exception/MongoException';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: 'mongodb://root:root@mongodb/writeapp?authSource=admin',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: `mongodb://${configService.get('MONGODB_USERNAME')}:${configService.get('MONGODB_PASSWORD')}@mongodb/writeapp?authSource=admin`,
         connectionFactory: (connection) => {
           connection.on('error', (error) => {
             if (error.message.includes('getaddrinfo EAI_AGAIN')) {

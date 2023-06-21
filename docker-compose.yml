@@ -9,6 +9,9 @@ services:
       - 8085:8085
     networks:
       - cinco
+    environment:
+      - MONGODB_USERNAME=root
+      - MONGODB_PASSWORD=root
     depends_on:
       - mongodb
 
