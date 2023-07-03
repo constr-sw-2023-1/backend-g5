@@ -9,7 +9,7 @@ import MongoException from 'src/exceptions/exception/MongoException';
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get('MONGODB_USERNAME')}:${configService.get('MONGODB_PASSWORD')}@mongodb:{configService.get('MONGODB_PORT')}`,
+        uri: `mongodb://${configService.get('MONGODB_USERNAME')}:${configService.get('MONGODB_PASSWORD')}@mongodb:${configService.get('MONGODB_PORT')}`,
         connectionFactory: (connection) => {
           connection.on('error', (error) => {
             if (error.message.includes('getaddrinfo EAI_AGAIN')) {
